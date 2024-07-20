@@ -1,6 +1,8 @@
 .env
+test.py
+pyvenv.cfg
 Lib/
+utils/users.csv
 Include/
 Scripts/
-pyvenv.cfg
-db/users.csv
+.vscode/
