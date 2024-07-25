@@ -1,7 +1,6 @@
 from telebot import TeleBot, custom_filters
 from telebot.storage import StateMemoryStorage
 
-from utils.users import *
 from tgbot.config import ConfigBot
 from tgbot.handlers import user_handlers, lobby_handlers, game_handlers
 from tgbot.middlewares import AuthMiddleware

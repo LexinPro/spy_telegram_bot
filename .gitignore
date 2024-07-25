@@ -2,7 +2,7 @@
 test.py
 pyvenv.cfg
 Lib/
-utils/users.csv
+utils/users/users.csv
 Include/
 Scripts/
 .vscode/

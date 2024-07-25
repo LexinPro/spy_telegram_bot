@@ -1,98 +1,167 @@
-from utils.users import *
+from utils.users.helpers import *
 
 
-def choice_end_by_sex(user_sex, m, w, mw):
+def choice_ending(user_sex, m, w, mw):
     return m if user_sex == "Мужской" else w if user_sex == "Женский" else mw
 
 
-class MessageClass:
-    def hello_message() -> str:
-        return "Привет, это телеграм бот ШПИОН. Добавь бота в группу и напиши команду /play\nЧтобы изменить информацию о себе - /info"
-    
-    def info_message(user_id: int) -> str:
-        user = get_info_user(user_id)
-        return f"Имя: {user["NAME"]}\nПол: {user["SEX"]}"
+"""
+1. Название
+2. Тип (handler/command/callback/...)
+3. Контекст
+4. Кому
+5. Если обработка ошибки, то _error
+"""
 
-    def user_is_not_auth() -> str:
-        return "Вы не зарегистрированы! Чтобы зарегистрироваться, введите /start в лс бота."
-    
-    def enter_new_name_message() -> str:
+
+class MessageClass:
+
+    def start_command_sender() -> str:
+        return """
+Добро пожаловать в игру! 🎉
+
+Вы попали в мир захватывающих ограблений. Ваша цель – помочь команде успешно провести ограбления, но будьте осторожны, среди вас могут быть шпионы, готовые всё испортить!
+
+Правила игры:
+1. Каждый раунд один из вас становится лидером и выбирает участников для ограбления
+2. Участники решают, поддержать ли ограбление или саботировать его
+3. Если хоть один участник решит саботировать, ограбление провалится
+Побеждает та команда, которая набрала больше побед в раундах 💰💥
+
+Как использовать бота:
+1. Добавьте бота в группу
+2. Один из участников пишет /play, чтобы создать лобби
+3. Остальные участники пишут /join, чтобы присоединиться к игре
+
+Вы также можете использовать команду /info, чтобы получить сообщение с вашей личной информацией и изменить её.
+
+Удачи, и пусть победит сильнейший!"""
+
+
+    def info_command_sender(user_id: int) -> str:
+        user = get_info_about_user(user_id)
+        return f"""
+Ваши данные:
+Никнейм: {user.name}
+Пол: {user.gender}
+
+Для изменения нажмите соответствующую кнопку"""
+
+
+    def checkAuth_middleware_sender() -> str:
+        return """
+Для того чтобы начать игру, необходимо зарегистрироваться.
+
+Чтобы зарегистрироваться, введите команду /start в личные сообщения бота. После этого вы сможете присоединиться к игре!"""
+
+
+    def enterName_callback_sender() -> str:
         return "Введите новое имя"
     
-    def edited_name_message() -> str:
+    def editedName_handler_sender() -> str:
         return "Имя изменено"
     
-    def choice_sex_message() -> str:
+    def choiceGender_callback_sender() -> str:
         return "Выберите пол"
     
-    def edited_sex_message() -> str:
+    def editedGender_callback_sender() -> str:
         return "Пол изменен"
     
-    def create_lobby_message(user_id: int) -> str:
-        user = get_info_user(user_id)
-        return f"[{user["NAME"]}](tg://user?id={user_id}) создал{choice_end_by_sex(user['SEX'], '', 'а', '\(a\)')} игру\. Введите /join, чтобы присоединиться"
+
     
-    def create_lobby_for_admin_message() -> str:
-        return 'ᅠ'
+    def play_command_createLobby_group(user_id: int) -> str:
+        user = get_info_about_user(user_id)
+        return f"""
+[{user.name}](tg://user?id={user_id}) создал{choice_ending(user.gender, '', 'а', '\(a\)')} лобби\! 🎉
+
+Чтобы присоединиться к игре, введите /join"""
     
-    def create_lobby_error_exist_message() -> str:
+
+    def play_command_createLobby_sender() -> str:
+        return """
+Вы успешно создали лобби! 🎉"""
+    
+
+    def play_command_error_lobbyExist_group() -> str:
         return "В этой группе уже создано лобби. Дождитесь, пока игра закончится"
     
-    def join_message(user_id: int) -> str:
-        user = get_info_user(user_id)
-        return f"[{user["NAME"]}](tg://user?id={user_id}) присоединил{choice_end_by_sex(user['SEX'], 'ся', 'ась', 'ся\(ась\)')} к игре\. Чтобы выйти, введите /leave"
+    def play_command_error_userPlayInOtherLobby_group() -> str:
+        return "Вы уже играете в другом лобби. Чтобы создать в этой группе, покиньте лобби"
     
-    def join_error_player_message() -> str:
-        return "Вы уже играете. Напишите в личных сообщениях /leave, чтобы покинуть"
+    def lobby_command_showManageLobby_sender() -> str:
+        return "ᅠ"
     
-    def join_error_not_exist_message() -> str:
+    def lobby_command_error_userNotCreator_sender() -> str:
+        return "Вы не являетесь создателем лобби"
+    
+    def join_command_sender(user_id: int) -> str:
+        user = get_info_about_user(user_id)
+        return f"""
+[{user.name}](tg://user?id={user_id}) присоединил{choice_ending(user.gender, 'ся', 'ась', 'ся\(ась\)')} к игре\! 🚀
+
+Чтобы выйти из лобби, введите /leave"""
+    
+
+    def join_command_error_lobbyNotExist_group() -> str:
         return "В этой группе не создано лобби. Введите /play, чтобы создать"
+
+    def join_command_error_userPlayInOtherLobby_group() -> str:
+        return "Вы уже в лобби другого чата! Введите /leave в личку бота, чтобы выйти"
     
-    def leave_message() -> str:
+    def join_command_error_userPlayInThisLobby_group() -> str:
+        return "Вы уже присоединились к лобби"
+    
+    def leave_command_sender() -> str:
         return "Вы покинули лобби"
     
-    def leave_all_message(user_id: int) -> str:
-        user = get_info_user(user_id)
-        return f"[{user["NAME"]}](tg://user?id={user_id}) покинул{choice_end_by_sex(user['SEX'], '', 'а', '\(а\)')} лобби"
+    def leave_command_group(user_id: int) -> str:
+        user = get_info_about_user(user_id)
+        return f"[{user.name}](tg://user?id={user_id}) покинул{choice_ending(user.gender, '', 'а', '\(а\)')} лобби 👋"
     
-    def leave_admin_message() -> str:
-        return "Админ лобби вышел из него, тем самым удалил лобби"
+    def leave_command_error_userNotPlay_sender() -> str:
+        return "Вы не находитесь в лобби"
     
-    def leave_error_not_player_message() -> str:
-        return "Вы не находитесь в игре"
+    def leave_command_error_userIsCreatorLobby_sender() -> str:
+        return "Вы являетесь создателем лобби"
     
-    def leave_error_not_player_this_lobby_message() -> str:
-        return "Вы находитесь не в этой игре"
+    def kick_command_group(kicked_user_id: int) -> str:
+        kicked_user = get_info_about_user(kicked_user_id)
+        return (f"[{kicked_user.name}](tg://user?id={kicked_user_id}) был{choice_ending(kicked_user.gender, '', 'а', '\(а\)')} исключен{choice_ending(kicked_user.gender, '', 'а', '\(а\)')} из лобби 🚫")
     
-    def leave_error_not_exist_message() -> str:
-        return "В этом чате нет активного лобби"
-    
-    def kick_message(kicked_user_id: int) -> str:
-        kicked_user = get_info_user(kicked_user_id)
-        return (f"[{kicked_user["NAME"]}](tg://user?id={kicked_user_id}) был{choice_end_by_sex(kicked_user["SEX"], '', 'а', '\(а\)')} исключен{choice_end_by_sex(kicked_user['SEX'], '', 'а', '\(а\)')} из игры")
-    
-    def kick2_message(kicked_user_id: int) -> str:
-        kicked_user = get_info_user(kicked_user_id)
-        return (f"[{kicked_user["NAME"]}](tg://openmessage?user_id={kicked_user_id}) был{choice_end_by_sex(kicked_user["SEX"], '', 'а', '\(а\)')} исключен{choice_end_by_sex(kicked_user['SEX'], '', 'а', '\(а\)')} из игры")
+    def kick_command_sender(kicked_user_id: int) -> str:
+        kicked_user = get_info_about_user(kicked_user_id)
+        return (f"[{kicked_user.name}](tg://openmessage?user_id={kicked_user_id}) был{choice_ending(kicked_user.gender, '', 'а', '\(а\)')} исключен{choice_ending(kicked_user.gender, '', 'а', '\(а\)')} из лобби 🚫")
 
-    def kick_for_admin_message(user_id: int) -> str:
-        user = get_info_user(user_id)
-        return f"Вы уверены, что хотите исключить из игры игрока [{user["NAME"]}](tg://openmessage?user_id={user_id})?"
-
-    def kick_error_not_exist_message():
-        return f"В этом чате нет активного лобби"
-
-    def kick_error_not_admin_message():
-        return f"Вы не являетесь админом этого лобби"
-
-    def kick_error_not_reply_message():
-        return f"Чтобы исключить игрока, перешлите его сообщение и напишите /kick"
-
-    def kick_error_not_player_this_lobby():
-        return f"Этот игрок не находится в лобби"
-
-    def kick_error_yourself_message():
-        return f"Нельзя исключить самого себя. Чтобы покинуть лобби, напишите /leave"
+    def kick_command_error_lobbyNotExist_group() -> str:
+        return "В этой группе нет лобби"
     
-    def list_players_message() -> str:
-        return "Чтобы кикнуть пользователя, нажмите на соответствующую игроку кнопку\nСписок игроков:"
+    def kick_command_error_userIsNotCreatorLobby_group() -> str:
+        return "Вы не являетесь создателем этого лобби"
+    
+    def kick_command_error_messageNotReply_group() -> str:
+        return "Чтобы исключить игрока, перешлите его сообщение и напишите /kick"
+    
+    def kick_command_error_kickedUserNotInLobby_group() -> str:
+        return "Этот игрок не находится в лобби"
+    
+    def kick_command_error_kickedUserIsCreator_group() -> str:
+        return "Нельзя исключить самого себя"
+
+    def listplayers_callback_sender() -> str:
+        return "Чтобы исключить пользователя, нажмите на соответствующую игроку кнопку\nСписок игроков:"
+
+    def kick_callback_confirm_sender(kicked_user_id: int) -> str:
+        kicked_user = get_info_about_user(kicked_user_id)
+        return f"Вы уверены, что хотите исключить из игры игрока [{kicked_user.name}](tg://openmessage?user_id={kicked_user_id})?"
+
+    def kick_callback_confirm_error_kickedUserNotInLobby_sender() -> str:
+        return "Игрок уже не находится в лобби"
+
+    def kick_callback_confirm_error_kickedUserIdCreator_sender() -> str:
+        return "Вы не можете исключить самого себя"
+    
+    def kick_callback_confirm_error_lobbyPlay_sender() -> str:
+        return "Вы не можете исключить игрока во время игры"
+
+    
+
