@@ -8,15 +8,14 @@ def list_players_callback_filter(callback: CallbackQuery) -> bool:
     return callback.data == "list_players_lobby" and is_creator(callback.from_user.id)
 
 
-def kick_callback_filter(callback: CallbackQuery) -> bool:
+def kick_confirm_callback_filter(callback: CallbackQuery) -> bool:
     first_word = callback.data.split('_')[0]
     return first_word == "confirmkick" and is_creator(callback.from_user.id)
 
 
-def kick_confirm_callback_filter(callback: CallbackQuery) -> bool:
+def kick_callback_filter(callback: CallbackQuery) -> bool:
     first_word = callback.data.split('_')[0]
     return first_word == "confirm" and is_creator(callback.from_user.id)
-
 
 def back_callback_filter(callback: CallbackQuery) -> bool:
     return callback.data in ("back_to_manage_lobby", "back_to_list_players") and is_creator(callback.from_user.id)

@@ -104,6 +104,9 @@ class MessageClass:
 
     def join_command_error_lobbyNotExist_group() -> str:
         return "В этой группе не создано лобби. Введите /play, чтобы создать"
+    
+    def join_command_error_lobbyPlay_group() -> str:
+        return "Нельзя присоединиться к лобби, так как идёт игра"
 
     def join_command_error_userPlayInOtherLobby_group() -> str:
         return "Вы уже в лобби другого чата! Введите /leave в личку бота, чтобы выйти"
@@ -124,6 +127,9 @@ class MessageClass:
     def leave_command_error_userIsCreatorLobby_sender() -> str:
         return "Вы являетесь создателем лобби"
     
+    def leave_command_error_lobbyPlay_sender() -> str:
+        return "Нельзя покинуть лобби, пока идёт игра"
+    
     def kick_command_group(kicked_user_id: int) -> str:
         kicked_user = get_info_about_user(kicked_user_id)
         return (f"[{kicked_user.name}](tg://user?id={kicked_user_id}) был{choice_ending(kicked_user.gender, '', 'а', '\(а\)')} исключен{choice_ending(kicked_user.gender, '', 'а', '\(а\)')} из лобби 🚫")
@@ -137,6 +143,9 @@ class MessageClass:
     
     def kick_command_error_userIsNotCreatorLobby_group() -> str:
         return "Вы не являетесь создателем этого лобби"
+    
+    def kick_command_error_lobbyPlay_group():
+        return "Нельзя исключить игрока во время игры"
     
     def kick_command_error_messageNotReply_group() -> str:
         return "Чтобы исключить игрока, перешлите его сообщение и напишите /kick"

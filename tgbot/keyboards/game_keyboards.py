@@ -21,10 +21,11 @@ def list_members_lobby_keyboard(chat_id: int):
     return keyboard
 
 
-def finish_game_keyboard(chat_id: int):
+def manage_game_keyboard(chat_id: int):
     keyboard = quick_markup({
+        "Список игроков": {"callback_data": "list_players"},
         "Закончить игру": {"callback_data": "finish_game"}
-    })
+    }, row_width=1)
     return keyboard
 
 
