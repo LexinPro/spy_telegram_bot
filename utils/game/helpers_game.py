@@ -22,12 +22,16 @@ def get_players_and_roles(chat_id: int) -> dict[int, str]:
     return lobbies_dict[chat_id].players
 
 
+def get_cretor_id(chat_id: int) -> int:
+    return lobbies_dict[chat_id].creator_id
+
+
 def get_leader_id(chat_id: int) -> int:
     return lobbies_dict[chat_id].leaders[-1]
 
 
 def get_together_score(chat_id: int) -> str:
-    return lobbies_dict[chat_id].score["together"]
+    return "".join(lobbies_dict[chat_id].score["together"])
 
 
 def add_member(player_id: int, chat_id: int):
@@ -36,6 +40,10 @@ def add_member(player_id: int, chat_id: int):
 
 def remove_member(player_id: int, chat_id: int):
     lobbies_dict[chat_id].members.pop(player_id)
+
+
+def is_leader(player_id: int, chat_id: int) -> bool:
+    return player_id == lobbies_dict[chat_id].leaders[-1]
 
 
 def is_member(player_id: int, chat_id: int) -> bool:
@@ -58,7 +66,9 @@ def check_everyone_voted(chat_id: int) -> bool:
 
 
 def get_choices_of_members(chat_id: int) -> bool:
-    return shuffle(list(lobbies_dict[chat_id].members.values()))
+    result = list(lobbies_dict[chat_id].members.values())
+    shuffle(result)
+    return result
 
 
 def sum_up_of_round(chat_id: int):

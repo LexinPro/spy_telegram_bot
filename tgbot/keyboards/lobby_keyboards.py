@@ -26,6 +26,6 @@ def list_players_keyboard(chat_id: int):
 
 def kick_keyboard(user_id: int):
     keyboard = quick_markup({
-        "Исключить": {"callback_data": f"kick_{user_id}"}, "Назад": {"callback_data": "back_to_list_players"}
+        "Исключить": {"callback_data": f"kick_{user_id}"}, "Назад ↩️": {"callback_data": "back_to_list_players"}
     }, row_width = 2)
     return keyboard

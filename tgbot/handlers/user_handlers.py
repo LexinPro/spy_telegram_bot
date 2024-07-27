@@ -18,13 +18,15 @@ def register_handlers(bot: TeleBot):
         user_name = message.from_user.first_name
         if not is_user_authorized(user_id):
             new_user(user_id, user_name)
+        bot.delete_message(user_id, message.id)
         bot.send_message(user_id, MessageClass.start_command_sender())
 
 
     @bot.message_handler(commands=['info'], chat_types=['private'])
     def info_command(message: Message):
         user_id = message.from_user.id
-        bot.send_message(user_id, MessageClass.info_command_sender(user_id), reply_markup=info_command_keyboard())
+        bot.delete_message(user_id, message.id)
+        bot.send_message(user_id, MessageClass.info_command_sender(user_id), parse_mode="html", reply_markup=info_command_keyboard())
 
 
     @bot.callback_query_handler(func=lambda callback: callback.data == "edit_name")
@@ -66,5 +68,5 @@ def register_handlers(bot: TeleBot):
             user_id = call.from_user.id
             message_id = call.message.id
             bot.delete_state(user_id, user_id)
-            bot.edit_message_text(MessageClass.info_command_sender(user_id), user_id, message_id, reply_markup=info_command_keyboard())
+            bot.edit_message_text(MessageClass.info_command_sender(user_id), user_id, message_id, parse_mode="html", reply_markup=info_command_keyboard())
     

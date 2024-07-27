@@ -74,13 +74,13 @@ class Lobby:
     def set_up_score(self):
         self.score["robbers"] = 0
         self.score["spies"] = 0
-        self.score["together"] = "1⃣2⃣3⃣4⃣5⃣"
+        self.score["together"] = ["1⃣", "2⃣", "3⃣", "4⃣", "5⃣"]
 
 
     def select_leader(self):
         random_player_id = self.select_random_player_id()
-        while random_player_id in self.leaders:
-            random_player_id = self.select_random_player_id()
+        # while random_player_id in self.leaders:
+        #     random_player_id = self.select_random_player_id()
         self.leaders.append(random_player_id)
 
 

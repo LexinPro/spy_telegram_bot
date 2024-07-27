@@ -13,17 +13,17 @@ def list_members_lobby_keyboard(chat_id: int):
         if player_id != leader_id:
             player_name= get_info_about_user(player_id).name
             if not is_member(player_id, chat_id):
-                keyboard.add(InlineKeyboardButton(f"{player_name}", callback_data=f"take_{chat_id}_{player_id}"))
+                keyboard.add(InlineKeyboardButton(f"{player_name}", callback_data=f"take_{player_id}"))
             else:
-                keyboard.add(InlineKeyboardButton(f"{player_name} ✅", callback_data=f"dont_take_{chat_id}_{player_id}"))
+                keyboard.add(InlineKeyboardButton(f"{player_name} ✅", callback_data=f"donttake_{player_id}"))
     if get_current_count_members_lobby(chat_id) == get_count_members_lobby(chat_id):
         keyboard.add(InlineKeyboardButton("Подтвердить", callback_data="accept"))
     return keyboard
 
 
-def manage_game_keyboard(chat_id: int):
+def manage_game_keyboard():
     keyboard = quick_markup({
-        "Список игроков": {"callback_data": "list_players"},
+        "Список игроков": {"callback_data": "list_players_lobby"},
         "Закончить игру": {"callback_data": "finish_game"}
     }, row_width=1)
     return keyboard
