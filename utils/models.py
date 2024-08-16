@@ -18,12 +18,6 @@ class UserOfTelegramBot:
     def __str__(self):
         return f"{self.id};{self.name};{self.gender};\n"
 
-    def update_name(self, new_name):
-        self.name = new_name
-
-    def update_gender(self, new_gender):
-        self.gender = new_gender
-
     def join_to_lobby(self, lobby_id: int):
         self.is_playing = True
         self.lobby_id = lobby_id
@@ -46,7 +40,8 @@ class Lobby:
         self.count_players = 1
         self.count_spies = None
         
-        self.status = False
+        self.status_game = False
+        self.status_round = False
         self.score = {
             "robbers": None,
             "spies": None,
@@ -66,8 +61,12 @@ class Lobby:
 
     
     def remove_player(self, user_id: int):
-        self.players[user_id] = None
+        self.players.pop(user_id)
         self.count_players -= 1
+
+    
+    def get_list_players(self):
+        return list(self.players.keys())
 
 
     def start_game(self):
@@ -75,7 +74,7 @@ class Lobby:
         self.assign_roles()
         self.reset_score()
         self.round_number = 0
-        self.status = True
+        self.status_game = True
         self.leaders = []
 
 
@@ -84,10 +83,11 @@ class Lobby:
         self.select_leader()
         self.max_count_members = settings_lobby[self.count_players]["count_members"][self.round_number - 1]
         self.count_members = 0
+        self.members = dict()
         self.add_member_of_robbery(self.leaders[-1])
 
     
-    def add_member_of_robbery(self, player_id):
+    def add_member_of_robbery(self, player_id: int):
         self.members[player_id] = None
         self.count_members += 1
 
@@ -96,12 +96,16 @@ class Lobby:
         self.members.pop(player_id)
         self.count_members -= 1
 
+
+    def get_list_members_of_robbery(self):
+        return list(self.members.keys())
+
     
     def member_vote(self, member_id: int, choice: bool):
         self.members[member_id] = choice
 
 
-    def get_choices_of_members(self) -> bool:
+    def get_choices_of_members(self) -> list[bool]:
         result = list(self.members.values())
         shuffle(result)
         return result
@@ -128,7 +132,7 @@ class Lobby:
         return self.score["robbers"] >= 3 or self.score["spies"] >= 3
     
 
-    def define_winner_team(self) -> str:
+    def define_team_winner(self) -> str:
         if self.score["robbers"] > self.score["spies"]:
             return "robbers"
         else:
@@ -139,7 +143,7 @@ class Lobby:
         for player_id in list(self.players.keys()):
             self.players[player_id] = None
         self.count_spies = None
-        self.status = False
+        self.status_game = False
         self.score = {
             "robbers": None,
             "spies": None,
@@ -157,7 +161,8 @@ class Lobby:
         
         k = 0
         while k < self.count_spies:
-            random_player_id = self.select_random_player_id()
+            for _ in range(300):
+                random_player_id = self.select_random_player_id()
             if self.players[random_player_id] == "robber":
                 self.players[random_player_id] = "spy"
                 k += 1
@@ -171,8 +176,9 @@ class Lobby:
 
     def select_leader(self):
         random_player_id = self.select_random_player_id()
-        # while random_player_id in self.leaders:
-        #     random_player_id = self.select_random_player_id()
+        if self.count_players >= 5:
+            while random_player_id in self.leaders:
+                random_player_id = self.select_random_player_id()
         self.leaders.append(random_player_id)
 
 

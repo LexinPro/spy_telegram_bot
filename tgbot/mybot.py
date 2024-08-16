@@ -2,7 +2,7 @@ from telebot import TeleBot, custom_filters
 from telebot.storage import StateMemoryStorage
 
 from tgbot.config import ConfigBot
-from tgbot.handlers import user_handlers, lobby_handlers, game_handlers
+from tgbot.handlers import user_handlers, lobby_handlers, game_handlers, delete_message_call
 from tgbot.middlewares import AuthMiddleware
 
 state_storage = StateMemoryStorage()
@@ -14,3 +14,4 @@ bot.setup_middleware(AuthMiddleware(bot))
 user_handlers.register_handlers(bot)
 lobby_handlers.register_handlers(bot)
 game_handlers.register_handlers(bot)
+delete_message_call.register_handler(bot)

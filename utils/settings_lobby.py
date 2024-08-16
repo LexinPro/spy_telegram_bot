@@ -1,5 +1,4 @@
 settings_lobby = {
-    # ^ TEST ^
     1: {
         "count_spies": 1,
         "count_members": [1, 1, 1, 1, 1]
@@ -16,8 +15,6 @@ settings_lobby = {
         "count_spies": 1,
         "count_members": [2, 2, 2, 2, 2]
     },
-    
-    # ^ REAL ^
     5: {
         "count_spies": 2,
         "count_members": [2, 3, 2, 3, 3]

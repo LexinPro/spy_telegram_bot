@@ -12,6 +12,6 @@ def info_command_keyboard():
 def choice_gender_keyboard():
     keyboard = quick_markup({
         "🚹 Мужской": {"callback_data": "edit_gender_man"}, "🚺 Женский": {"callback_data": "edit_gender_woman"},
-        "Назад ↩️": {"callback_data": "back_to_info_command"}
+        "Назад ↩️": {"callback_data": "back_info_command"}
     }, row_width = 2)
     return keyboard

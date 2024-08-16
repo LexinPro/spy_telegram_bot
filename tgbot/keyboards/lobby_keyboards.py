@@ -1,8 +1,8 @@
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from telebot.util import quick_markup
 
-from utils.game.helpers_lobby import *
-from utils.users.helpers import *
+from utils.lobby_manager import *
+from utils.users_data import *
 
 
 def manage_lobby_keyboard():
@@ -14,18 +14,19 @@ def manage_lobby_keyboard():
     return keyboard
 
 
-def list_players_keyboard(chat_id: int):
+def list_players_keyboard(lobby_id: int):
     keyboard = InlineKeyboardMarkup()
-    for user_id in get_list_players_lobby(chat_id):
-        user_name = get_info_about_user(user_id).name
-        keyboard.add(InlineKeyboardButton(f"{user_name}{" ⭐️" if is_creator(user_id, chat_id) else ""}",
-                                          callback_data=f"confirmkick_{user_id}"))
-    keyboard.add(InlineKeyboardButton("Назад ↩️", callback_data="back_to_manage_lobby"))
+    lobby = find_lobby(lobby_id)
+    for player_id in lobby.get_list_players():
+        player_name = find_user(player_id).name
+        keyboard.add(InlineKeyboardButton(f"{player_name}{" ⭐️" if player_id == lobby.creator_id else ""}",
+                                          callback_data=f"confirmkick_{player_id}"))
+    keyboard.add(InlineKeyboardButton("Назад ↩️", callback_data="back_manage_lobby"))
     return keyboard
 
 
 def kick_keyboard(user_id: int):
     keyboard = quick_markup({
-        "Исключить": {"callback_data": f"kick_{user_id}"}, "Назад ↩️": {"callback_data": "back_to_list_players"}
+        "Исключить": {"callback_data": f"kick_{user_id}"}, "Назад ↩️": {"callback_data": "back_list_players"}
     }, row_width = 2)
     return keyboard

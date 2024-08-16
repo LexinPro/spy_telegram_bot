@@ -1,7 +1,7 @@
 from utils.models import UserOfTelegramBot, users
 
 
-path = "utils/users/users.csv"
+path = "utils/users.csv"
 
 
 def initialize_users():

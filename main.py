@@ -1,5 +1,5 @@
 from tgbot.mybot import bot
-from utils.users.helpers import initialize_users
+from utils.users_data import initialize_users
 
 
 if __name__ == '__main__':
